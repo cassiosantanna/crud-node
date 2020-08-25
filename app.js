@@ -29,6 +29,18 @@ app.get('/inserir', function(req, res) {
     res.render('inserir')
 })
 
+app.get('/select/:id?', function(req, res) {
+    if(!req.params.id) {
+        sql.query("select * from usuarios order by id asc", function(err, results, fields) {
+            res.render('select', {data:results})
+        })
+    } else {
+        sql.query("select * from usuarios where id=? order by id asc", [req.params.id], function(err, results,fields){
+            res.render('select', {data:results})
+        })
+    }
+})
+
 app.post("/controllerForm", urlencodeParser, function (req, res) {
     sql.query("insert into usuarios values (?,?,?)", [req.body.id, req.body.nome, req.body.idade])
     res.render('controllerForm', {name: req.body.nome})
