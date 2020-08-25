@@ -46,6 +46,23 @@ app.post("/controllerForm", urlencodeParser, function (req, res) {
     res.render('controllerForm', {name: req.body.nome})
 })
 
+app.get("/deletar/:id", function(req, res) {
+    sql.query("delete from usuarios where id=?", [req.params.id])
+    res.render('deletar')
+})
+
+app.get("/update/:id", function(req, res) {
+    sql.query("select *from usuarios where id=?", [req.params.id], function(err, results, fields){
+        res.render('update', {id:req.params.id, nome:results[0].nome, idade:results[0].idade})
+    })
+})
+
+app.post("/controllerUpdate", urlencodeParser, function(req, res) {
+    sql.query("update usuarios set nome=?, idade=? where id=?", [req.body.nome, req.body.idade, req.body.id])
+    res.render('controllerUpdate')
+})
+
+
 //start server
 app.listen(3000, function(req, res) {
     console.log('Servidor Rodando')
